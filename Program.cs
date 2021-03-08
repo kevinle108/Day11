@@ -42,7 +42,7 @@ namespace Day11
         {
             if (l == k)
             {
-                PrintList(ls.GetRange(k-1, ls.Count-k-1));
+                PrintList(ls.GetRange(0, k));
                 return;
             }
             for (int i = l; i < ls.Count; i++)
