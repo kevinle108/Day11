@@ -7,22 +7,57 @@ namespace Day11
     {
         static void Main(string[] args)
         {
-            var ls = new List<string> { "A", "B", "C", "D" };
-            int k = 3;
-            KSubsets(ls, k);
+            var ls = new List<string> { "A", "B", "C" };
+            int k = 1;
+            KPermutations(ls, k);
         }
 
-        static void KSubsets(List<string> ls, int k)
+        static void KPermutations(List<string> ls, int k)
         {
             var results = new List<string>();
-            Console.WriteLine("Using KSubsets1");
-            KSubsets1(ls, results, k);
-            Console.WriteLine("Using KSubsets2");
-            KSubsets2(ls, results, k);
-            Console.WriteLine("Using KSubsets3");
-            KSubsets3(ls, 0, results, k);
-            Console.WriteLine("Using KSubsets4");
-            KSubsets4(ls, 0, k);
+            Console.WriteLine("Using KPermutations1");
+            KPermutations1(ls, results, k);
+            Console.WriteLine("Using Permutations2");
+            KPermutations2(ls, 0, k);
+        }
+
+        static void KPermutations1(List<string> ls, List<string> results, int k)
+        {
+            if (results.Count == k)
+            {
+                PrintList(results);
+                return;
+            }
+            if (ls.Count == 0) return;
+            for (int i = 0; i < ls.Count; i++)
+            {
+                var newList = new List<string>(ls);
+                var newResults = new List<string>(results);
+                newList.RemoveAt(i);
+                newResults.Add(ls[i]);
+                KPermutations1(newList, newResults, k);
+            }
+        }
+        static void KPermutations2(List<string> ls, int l, int k)
+        {
+            if (l == k)
+            {
+                PrintList(ls.GetRange(k-1, ls.Count-k-1));
+                return;
+            }
+            for (int i = l; i < ls.Count; i++)
+            {
+                Swap(ls, i, l);
+                KPermutations2(ls, l + 1, k);
+                Swap(ls, i, l);
+            }
+        }
+
+        static void Swap(List<string> ls, int i, int j)
+        {
+            string tmp = ls[i];
+            ls[i] = ls[j];
+            ls[j] = tmp;
         }
 
         static void PrintList(List<string> ls)
@@ -31,82 +66,6 @@ namespace Day11
             foreach (string s in ls)
                 Console.Write(s + " ");
             Console.WriteLine("}");
-        }
-
-        static void KSubsets1(List<string> ls, List<string> results, int k)
-        {
-            if (ls.Count == 0)
-            {
-                if (results.Count == k)
-                {
-                    PrintList(results);
-                    return;
-                }
-                else return;
-            }
-            var newList = new List<string>(ls);
-            var newResults = new List<string>(results);
-            string s = newList[0];
-            newList.RemoveAt(0);
-            KSubsets1(newList, newResults, k);
-            newResults.Add(s);
-            KSubsets1(newList, newResults, k);
-        }
-
-        static void KSubsets2(List<string> ls, List<string> results, int k)
-        {
-            if (ls.Count == 0)
-            {
-                if (results.Count == k)
-                {
-                    PrintList(results);
-                    return;
-                }
-                else return;
-            }
-            string s = ls[0];
-            ls.RemoveAt(0);
-            KSubsets2(ls, results, k);
-            results.Add(s);
-            KSubsets2(ls, results, k);
-            results.RemoveAt(results.Count - 1);
-            ls.Insert(0, s);
-        }
-
-        static void KSubsets3(List<string> ls, int l, List<string> results, int k)
-        {
-            if (ls.Count == l)
-            {
-                if (results.Count == k)
-                {
-                    PrintList(results);
-                    return;
-                }
-                else return;
-            }
-            string s = ls[l];
-            KSubsets3(ls, l + 1, results, k);
-            results.Add(s);
-            KSubsets3(ls, l + 1, results, k);
-            results.RemoveAt(results.Count - 1);
-        }
-
-        static void KSubsets4(List<string> ls, int l, int k)
-        {
-            if (ls.Count == l)
-            {
-                if (l == k)
-                {
-                    PrintList(ls);
-                    return;
-                }
-                else return;
-            }
-            string s = ls[l];
-            ls.RemoveAt(l);
-            KSubsets4(ls, l, k);
-            ls.Insert(l, s);
-            KSubsets4(ls, l + 1, k);
         }
     }
 }
